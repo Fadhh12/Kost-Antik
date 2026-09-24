@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\InstanceController;
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\LeaseController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\PropertyImageController;
 use App\Http\Controllers\Admin\RoomController;
@@ -28,6 +30,14 @@ Route::resource('properties.rooms', RoomController::class)->only(['store', 'upda
 Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
 Route::patch('bookings/{booking}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
 Route::patch('bookings/{booking}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
+
+// Kontrak & tagihan
+Route::get('leases', [LeaseController::class, 'index'])->name('leases.index');
+Route::get('leases/create', [LeaseController::class, 'create'])->name('leases.create');
+Route::post('leases', [LeaseController::class, 'store'])->name('leases.store');
+Route::get('leases/{lease}', [LeaseController::class, 'show'])->name('leases.show');
+Route::patch('leases/{lease}/terminate', [LeaseController::class, 'terminate'])->name('leases.terminate');
+Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 
 // Pengguna
 Route::get('users', [UserController::class, 'index'])->name('users.index');
