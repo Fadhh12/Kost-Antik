@@ -5,6 +5,7 @@ use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\InvoiceController;
 use App\Http\Controllers\Tenant\LeaseController;
 use App\Http\Controllers\Tenant\PaymentController;
+use App\Http\Controllers\Tenant\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,8 @@ Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])
 
 Route::get('/leases', [LeaseController::class, 'index'])->name('leases.index');
 Route::get('/leases/{lease}', [LeaseController::class, 'show'])->name('leases.show');
+Route::post('/leases/{lease}/review', [ReviewController::class, 'store'])->name('leases.review');
+Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
 
 Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 Route::post('/invoices/{invoice}/payments', [PaymentController::class, 'store'])->middleware('throttle:10,1')->name('invoices.payments.store');

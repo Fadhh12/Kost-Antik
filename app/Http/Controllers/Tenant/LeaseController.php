@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Enums\LeaseStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Lease;
+use App\Services\ReviewService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -24,7 +25,7 @@ class LeaseController extends Controller
         ]);
     }
 
-    public function show(Lease $lease): View
+    public function show(Lease $lease, ReviewService $reviews): View
     {
         $this->authorize('view', $lease);
 
@@ -32,20 +33,7 @@ class LeaseController extends Controller
 
         return view('tenant.leases.show', [
             'lease' => $lease,
-            'canReview' => $this->canReview($lease),
+            'canReview' => ! $lease->review && $reviews->eligible($lease),
         ]);
-    }
-
-    /**
-     * FR-REV-01: aktif minimal N hari atau sudah selesai, satu ulasan per kontrak.
-     */
-    private function canReview(Lease $lease): bool
-    {
-        if ($lease->review) {
-            return false;
-        }
-
-        return $lease->status === LeaseStatus::Completed
-            || ($lease->isActive() && $lease->start_date->lte(today()->subDays((int) config('kost.review_min_active_days'))));
     }
 }
