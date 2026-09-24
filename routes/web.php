@@ -16,6 +16,11 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/kost', [PropertyCatalogController::class, 'index'])->name('kost.index');
 Route::get('/kost/{property:slug}', [PropertyCatalogController::class, 'show'])->name('kost.show');
 
+// F-04: tamu yang klik "Ajukan sewa" diarahkan ke login/daftar, lalu kembali ke kamar yang dipilih.
+Route::get('/kost/{property:slug}/ajukan', [PropertyCatalogController::class, 'apply'])
+    ->middleware('auth')
+    ->name('kost.apply');
+
 // Styleguide komponen: hanya di environment local.
 if (app()->environment('local')) {
     Route::view('/_styleguide', 'styleguide')->name('styleguide');
