@@ -1,9 +1,12 @@
-@props(['messages'])
+@props(['for' => null, 'messages' => null, 'id' => null])
+
+@php
+    $messages = $messages ?? ($for ? $errors->get($for) : []);
+@endphp
 
 @if ($messages)
-    <ul {{ $attributes->merge(['class' => 'text-sm text-red-600 space-y-1']) }}>
-        @foreach ((array) $messages as $message)
-            <li>{{ $message }}</li>
-        @endforeach
-    </ul>
+    <p @if ($id) id="{{ $id }}" @endif {{ $attributes->merge(['class' => 'mt-1.5 flex items-start gap-1.5 text-xs font-medium text-danger']) }}>
+        <x-lucide-circle-alert class="mt-px h-3.5 w-3.5 shrink-0" stroke-width="2" aria-hidden="true" />
+        <span>{{ implode(' ', (array) $messages) }}</span>
+    </p>
 @endif
