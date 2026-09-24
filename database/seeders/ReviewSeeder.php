@@ -33,7 +33,18 @@ class ReviewSeeder extends Seeder
             ->orderBy('id')
             ->get();
 
-        foreach ($leases->take(count($comments)) as $i => $lease) {
+        // Sebar ulasan ke semua gedung (round-robin per gedung).
+        $groups = $leases->groupBy(fn (Lease $l) => $l->room->property_id)->values();
+        $spread = collect();
+        for ($i = 0; $spread->count() < $leases->count(); $i++) {
+            $groups->each(function ($group) use ($i, $spread) {
+                if ($group->has($i)) {
+                    $spread->push($group[$i]);
+                }
+            });
+        }
+
+        foreach ($spread->take(count($comments)) as $i => $lease) {
             [$rating, $comment] = $comments[$i];
 
             $review = new Review(['rating' => $rating, 'comment' => $comment]);

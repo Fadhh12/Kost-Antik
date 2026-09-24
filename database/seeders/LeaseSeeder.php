@@ -62,10 +62,13 @@ class LeaseSeeder extends Seeder
         $this->leases->completeExpired();
 
         // 2) Kontrak aktif. Sebagian kamar dibiarkan kosong untuk katalog.
-        $available = Room::with('property')->whereIn('id', $rooms->pluck('id'))->where('status', RoomStatus::Available)->get();
-        $activeCount = (int) floor($available->count() * 0.7);
+        // Sisakan 2 kamar kosong per gedung agar katalog tetap punya pilihan.
+        $toLease = Room::with('property')->whereIn('id', $rooms->pluck('id'))->where('status', RoomStatus::Available)->get()
+            ->groupBy('property_id')
+            ->flatMap(fn (Collection $group) => $group->slice(0, max(0, $group->count() - 2)))
+            ->values();
 
-        foreach ($available->take($activeCount) as $i => $room) {
+        foreach ($toLease as $i => $room) {
             $tenant = $this->pickTenant($tenants, $room);
             if (! $tenant) {
                 continue;
