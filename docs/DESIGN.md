@@ -39,7 +39,8 @@ Kuningan hanya dipakai sebagai aksen kecil (≤ 5% permukaan), seperti gagang pi
 | Sukses | available, paid, verified, active, approved, accepted | `success` (hijau daun `#2F7A4B`, dibedakan dari hijau tegel) |
 | Peringatan | pending, pending_verification | `warning` (`#8A5A00` di atas `#FCF1D8`) |
 | Bahaya | overdue, rejected, terminated | `danger` (`#B23A2A` di atas `#FBE7E3`) |
-| Netral | maintenance, void, cancelled, expired, completed, inactive, occupied | `neutral` (`#56625F` di atas `#EDEFEC`) |
+| Info (hijau tegel) | occupied, unpaid | `info` (`tegel-700` di atas `tegel-50`) |
+| Netral | maintenance, void, cancelled, expired, completed, inactive | `neutral` (`#56625F` di atas `#EDEFEC`) |
 
 Badge selalu berisi **teks + ikon**, jadi status tidak bergantung pada warna saja (WCAG 1.4.1). Pemetaan ada di satu tempat: method `color()` pada tiap Enum, lalu dipakai oleh komponen `<x-status-badge>`.
 

@@ -123,6 +123,11 @@
         @apply mt-1 flex justify-end gap-2 border-t border-kapur-100 pt-3 md:mt-0 md:table-cell md:border-0 md:pt-3 md:text-right;
     }
 
+    /* Arsir untuk kamar dalam perbaikan (denah). */
+    .stripe-maintenance {
+        background-image: repeating-linear-gradient(135deg, transparent, transparent 6px, theme('colors.neutral.line') 6px, theme('colors.neutral.line') 12px);
+    }
+
     .link {
         @apply font-medium text-tegel-700 underline decoration-tegel-200 decoration-2 underline-offset-4 transition hover:decoration-tegel-600;
     }

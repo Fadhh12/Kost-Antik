@@ -25,7 +25,8 @@ enum RoomStatus: string
     {
         return match ($this) {
             self::Available => 'success',
-            self::Occupied, self::Maintenance => 'neutral',
+            self::Occupied => 'info',
+            self::Maintenance => 'neutral',
         };
     }
 
