@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\View\Composers\AdminCountsComposer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -28,5 +30,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Owner boleh semua aksi otorisasi. Aturan bisnis (BR-xx) tetap dijaga di Service.
         Gate::before(fn (User $user) => $user->isOwner() ? true : null);
+
+        View::composer('components.layouts.admin', AdminCountsComposer::class);
     }
 }
