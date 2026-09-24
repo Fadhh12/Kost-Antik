@@ -55,7 +55,7 @@
             @foreach ($invoices as $invoice)
                 <tr>
                     <td data-label="Tagihan">
-                        <a href="{{ route('admin.leases.show', $invoice->lease) }}" class="num block font-medium text-ink-900 hover:text-tegel-700">{{ $invoice->number }}</a>
+                        <a href="{{ route('admin.leases.show', $invoice->lease) }}" class="num block whitespace-nowrap font-medium text-ink-900 hover:text-tegel-700">{{ $invoice->number }}</a>
                         <span class="block text-xs text-ink-500">Bulan ke-{{ $invoice->sequence }}</span>
                     </td>
                     <td data-label="Penyewa">
