@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\Gender;
+use App\Enums\UserStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +15,19 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 100);
             $table->string('email')->unique();
+            $table->string('phone', 20)->unique();
+            $table->enum('gender', Gender::values());
+            $table->string('photo_path')->nullable();
+            $table->foreignId('instance_id')->nullable()->constrained()->nullOnDelete();
+            $table->enum('status', UserStatus::values())->default(UserStatus::Pending->value)->index();
+            $table->string('status_reason', 500)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
