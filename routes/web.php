@@ -7,6 +7,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Styleguide komponen: hanya di environment local.
+if (app()->environment('local')) {
+    Route::view('/_styleguide', 'styleguide')->name('styleguide');
+}
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
