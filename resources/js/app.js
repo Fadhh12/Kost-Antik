@@ -29,7 +29,10 @@ document.addEventListener('submit', (event) => {
 });
 
 // Tombol kembali dari bfcache: aktifkan lagi tombol yang terkunci.
-window.addEventListener('pageshow', () => {
+window.addEventListener('pageshow', (event) => {
+    if (!event.persisted) {
+        return;
+    }
     document.querySelectorAll('button.is-loading').forEach((button) => {
         button.disabled = false;
         button.classList.remove('is-loading');
