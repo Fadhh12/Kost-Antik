@@ -5,6 +5,10 @@
         : (isset($filters['city']) ? 'Kost di '.$filters['city'] : 'Cari kost');
 @endphp
 
+@push('head')
+    @vite('resources/js/map.js')
+@endpush
+
 <x-layouts.public :title="$title" description="Daftar kost di Bekasi dan Cikarang lengkap dengan harga, sisa kamar, fasilitas, dan ulasan penghuni.">
     <div class="mx-auto max-w-page px-4 pb-8 pt-10 sm:px-6 lg:px-8" x-data="{ drawer: false }">
         <div class="flex flex-col gap-2">
@@ -14,6 +18,23 @@
             </p>
         </div>
 
+        @if ($mapPoints->isNotEmpty())
+            <div class="mt-6 overflow-hidden rounded-xl border border-kapur-200 shadow-tile">
+                <div
+                    data-map-points
+                    data-points="{{ $mapPoints->map(fn ($p) => [
+                        'lat' => $p->latitude,
+                        'lng' => $p->longitude,
+                        'name' => $p->name,
+                        'url' => route('kost.show', $p),
+                        'thumb' => $p->cover_url,
+                        'rating' => $p->rating_avg ? round($p->rating_avg, 1) : null,
+                        'reviews' => $p->reviews_count,
+                    ])->toJson() }}"
+                    class="h-72 w-full sm:h-80"
+                ></div>
+            </div>
+        @endif
         <form id="filter" method="GET" action="{{ route('kost.index') }}" data-no-lock x-ref="form"
             class="mt-8 grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)]">
 

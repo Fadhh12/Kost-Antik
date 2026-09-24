@@ -63,3 +63,66 @@ function initMap(el) {
 }
 
 document.querySelectorAll('[data-map]').forEach(initMap);
+
+/*
+ * Peta multi-titik (katalog publik): <div data-map-points data-points="[...]"></div>
+ * Tiap titik: { lat, lng, name, url, thumb?, rating?, reviews? }.
+ */
+function initMultiMap(el) {
+    let points = [];
+    try {
+        points = JSON.parse(el.dataset.points || '[]');
+    } catch {
+        points = [];
+    }
+
+    const map = L.map(el, { scrollWheelZoom: false, attributionControl: true }).setView(DEFAULT_CENTER, 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    const markers = points
+        .filter((point) => typeof point.lat === 'number' && typeof point.lng === 'number')
+        .map((point) => {
+            const marker = L.marker([point.lat, point.lng], { icon: pin }).addTo(map);
+            marker.bindPopup(buildPopup(point));
+
+            return marker;
+        });
+
+    if (markers.length) {
+        map.fitBounds(L.featureGroup(markers).getBounds().pad(0.2), { maxZoom: 15 });
+    }
+}
+
+function buildPopup(point) {
+    const box = document.createElement('div');
+    box.className = 'w-44';
+
+    if (point.thumb) {
+        const img = document.createElement('img');
+        img.src = point.thumb;
+        img.alt = '';
+        img.className = 'mb-1.5 h-20 w-full rounded-md object-cover';
+        box.appendChild(img);
+    }
+
+    const title = document.createElement('a');
+    title.href = point.url;
+    title.textContent = point.name;
+    title.className = 'block text-sm font-semibold text-tegel-800 hover:underline';
+    box.appendChild(title);
+
+    if (point.rating) {
+        const rating = document.createElement('p');
+        rating.className = 'mt-0.5 text-xs text-ink-500';
+        rating.textContent = `★ ${point.rating} (${point.reviews ?? 0} ulasan)`;
+        box.appendChild(rating);
+    }
+
+    return box;
+}
+
+document.querySelectorAll('[data-map-points]').forEach(initMultiMap);

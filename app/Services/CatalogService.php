@@ -15,6 +15,8 @@ class CatalogService
 {
     public const PER_PAGE = 9;
 
+    public const MAP_LIMIT = 200;
+
     public const SORTS = [
         'terbaru' => 'Terbaru',
         'termurah' => 'Harga termurah',
@@ -26,8 +28,38 @@ class CatalogService
      */
     public function search(array $filters): LengthAwarePaginator
     {
-        $query = $this->baseQuery();
+        $query = $this->applyFilters($this->baseQuery(), $filters);
 
+        match ($filters['sort'] ?? 'terbaru') {
+            'termurah' => $query->orderByRaw('COALESCE(min_available_price, min_price) asc'),
+            'rating' => $query->orderByDesc('rating_avg')->orderByDesc('reviews_count'),
+            default => $query->latest(),
+        };
+
+        return $query->paginate(self::PER_PAGE)->withQueryString();
+    }
+
+    /**
+     * Titik peta untuk kost di sekitar (F-XX): mengikuti filter yang sama dengan search(),
+     * dibatasi MAP_LIMIT agar peta tetap ringan.
+     *
+     * @param  array{q?:string,city?:string,gender?:string,min_price?:int,max_price?:int,available?:bool,sort?:string}  $filters
+     * @return Collection<int, Property>
+     */
+    public function points(array $filters): Collection
+    {
+        return $this->applyFilters($this->baseQuery(), $filters)
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->limit(self::MAP_LIMIT)
+            ->get();
+    }
+
+    /**
+     * @param  array{q?:string,city?:string,gender?:string,min_price?:int,max_price?:int,available?:bool,sort?:string}  $filters
+     */
+    private function applyFilters(Builder $query, array $filters): Builder
+    {
         if ($q = trim((string) ($filters['q'] ?? ''))) {
             $query->where(fn (Builder $w) => $w
                 ->where('name', 'like', "%{$q}%")
@@ -56,13 +88,7 @@ class CatalogService
             $query->whereHas('rooms', fn (Builder $r) => $r->where('status', RoomStatus::Available));
         }
 
-        match ($filters['sort'] ?? 'terbaru') {
-            'termurah' => $query->orderByRaw('COALESCE(min_available_price, min_price) asc'),
-            'rating' => $query->orderByDesc('rating_avg')->orderByDesc('reviews_count'),
-            default => $query->latest(),
-        };
-
-        return $query->paginate(self::PER_PAGE)->withQueryString();
+        return $query;
     }
 
     /**

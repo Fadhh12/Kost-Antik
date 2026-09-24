@@ -20,6 +20,7 @@ class PropertyCatalogController extends Controller
 
         return view('public.catalog', [
             'properties' => $catalog->search($filters),
+            'mapPoints' => $catalog->points($filters),
             'filters' => $filters,
             'cities' => $catalog->cities(),
             'sorts' => CatalogService::SORTS,
