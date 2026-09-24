@@ -21,3 +21,11 @@ Keputusan teknis yang diambil selama pembangunan karena blueprint ambigu atau ka
 
 ## D-05 Â· Granularitas commit
 - **Keputusan:** Commit & push per unit kerja kecil (bukan hanya per fase), atas permintaan pemilik repo. Pesan tetap Conventional Commits, dan setiap commit lolos `php artisan test` + `pint --test`.
+
+## D-06 · Tanpa mode gelap di MVP
+- **Konteks:** Blueprint tidak meminta mode gelap; ruang lingkup 30+ layar.
+- **Keputusan:** Satu tema terang, dikunci di seluruh halaman. Token warna terpusat di Tailwind sehingga mode gelap bisa ditambahkan kemudian.
+
+## D-07 · Ikon Lucide dirender di server
+- **Keputusan:** Pakai `mallardduck/blade-lucide-icons` (SVG inline dari Blade) alih-alih `lucide` JS, supaya ikon tidak berkedip saat halaman dimuat dan bisa dipakai dinamis untuk ikon fasilitas.
+
