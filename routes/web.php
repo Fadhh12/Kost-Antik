@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PropertyCatalogController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,13 @@ Route::get('/kost/{property:slug}/ajukan', [PropertyCatalogController::class, 'a
 // Styleguide komponen: hanya di environment local.
 if (app()->environment('local')) {
     Route::view('/_styleguide', 'styleguide')->name('styleguide');
+
+    // Masuk cepat sebagai akun demo untuk pengecekan visual (screenshot).
+    Route::get('/_login-as/{email}', function (string $email) {
+        auth()->login(User::where('email', $email)->firstOrFail());
+
+        return redirect(request('to', '/dashboard'));
+    })->name('dev.login-as');
 }
 
 /*
