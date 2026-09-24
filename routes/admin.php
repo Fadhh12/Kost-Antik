@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\LeaseController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\PropertyImageController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
+Route::get('/dashboard/revenue-chart', [DashboardController::class, 'revenueChart'])->name('dashboard.revenue');
 
 // Gedung, foto, kamar
 Route::resource('properties', PropertyController::class);
@@ -58,6 +61,10 @@ Route::middleware('role:owner')->group(function () {
     Route::patch('users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
     Route::patch('users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
     Route::patch('users/{user}/reactivate', [UserController::class, 'reactivate'])->name('users.reactivate');
+
+    Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('reviews/{review}/toggle', [ReviewController::class, 'toggle'])->name('reviews.toggle');
+    Route::get('reports/payments', [ReportController::class, 'payments'])->name('reports.payments');
 
     Route::resource('facilities', FacilityController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('instances', InstanceController::class)->only(['index', 'store', 'update', 'destroy']);
