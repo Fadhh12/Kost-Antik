@@ -62,7 +62,7 @@ export default {
                 // Status.
                 success: { DEFAULT: '#2F7A4B', soft: '#E4F2E8', line: '#B9DCC4' },
                 warning: { DEFAULT: '#8A5A00', soft: '#FCF1D8', line: '#EED49A' },
-                danger: { DEFAULT: '#B23A2A', soft: '#FBE7E3', line: '#F0BFB6' },
+                danger: { DEFAULT: '#B23A2A', strong: '#962F21', soft: '#FBE7E3', line: '#F0BFB6' },
                 neutral: { DEFAULT: '#56625F', soft: '#EDEFEC', line: '#D3D8D4' },
             },
             fontFamily: {
