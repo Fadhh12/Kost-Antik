@@ -26,9 +26,16 @@ class ReportController extends Controller
             return $this->csv($query, $from, $to);
         }
 
-        $byProperty = (clone $query)->get()->groupBy(fn (Payment $p) => $p->invoice->lease->room->property->name)
-            ->map(fn ($rows) => ['count' => $rows->count(), 'amount' => $rows->sum('amount')])
-            ->sortByDesc('amount');
+        $byProperty = (clone $query)
+            ->join('invoices', 'invoices.id', '=', 'payments.invoice_id')
+            ->join('leases', 'leases.id', '=', 'invoices.lease_id')
+            ->join('rooms', 'rooms.id', '=', 'leases.room_id')
+            ->join('properties', 'properties.id', '=', 'rooms.property_id')
+            ->selectRaw('properties.name as property_name, count(payments.id) as count, sum(payments.amount) as amount')
+            ->groupBy('properties.name')
+            ->orderByDesc('amount')
+            ->get()
+            ->mapWithKeys(fn ($row) => [$row->property_name => ['count' => (int) $row->count, 'amount' => (int) $row->amount]]);
 
         return view('admin.reports.payments', [
             'payments' => (clone $query)->latest('verified_at')->paginate(15)->withQueryString(),
@@ -59,8 +66,8 @@ class ReportController extends Controller
     private function query(Request $request, Carbon $from, Carbon $to): Builder
     {
         return Payment::query()
-            ->where('status', PaymentStatus::Verified)
-            ->whereBetween('verified_at', [$from, $to])
+            ->where('payments.status', PaymentStatus::Verified)
+            ->whereBetween('payments.verified_at', [$from, $to])
             ->when($request->filled('property'), fn ($q) => $q->whereHas('invoice.lease.room', fn ($r) => $r->where('property_id', $request->integer('property'))))
             ->with(['invoice.lease.user', 'invoice.lease.room.property', 'verifier']);
     }
