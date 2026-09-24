@@ -164,7 +164,7 @@ return [
 
     'custom' => [
         'phone' => [
-            'regex' => 'Nomor HP harus diawali 08, 62, atau +62 dan berisi 10–14 digit.',
+            'regex' => 'Nomor HP harus diawali 08, 62, atau +62 dan berisi 10-14 digit.',
         ],
         'amount' => [
             'in' => 'Nominal harus sama persis dengan jumlah tagihan.',
