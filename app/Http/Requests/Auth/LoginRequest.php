@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Enums\UserStatus;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -47,6 +48,18 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // FR-AUTH-03: akun ditolak/nonaktif tidak boleh masuk.
+        $user = Auth::user();
+        if (! $user->status->canLogin()) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => $user->status === UserStatus::Rejected
+                    ? 'Pendaftaran akunmu ditolak. '.($user->status_reason ?: 'Hubungi pengelola kost untuk informasi lebih lanjut.')
+                    : 'Akunmu sedang dinonaktifkan. '.($user->status_reason ?: 'Hubungi pengelola kost untuk mengaktifkan kembali.'),
             ]);
         }
 
