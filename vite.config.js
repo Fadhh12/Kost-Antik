@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [
         laravel({
             // map.js dan chart.js hanya dimuat di halaman yang membutuhkan.
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/map.js'],
+            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/map.js', 'resources/js/charts.js'],
             refresh: true,
         }),
     ],
