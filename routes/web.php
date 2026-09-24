@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardRedirectController;
+use App\Http\Controllers\PaymentProofController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PropertyCatalogController;
@@ -46,6 +47,9 @@ Route::middleware(['auth', 'account.active'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // FR-PAY-06: bukti bayar privat
+    Route::get('/payments/{payment}/proof', PaymentProofController::class)->name('payments.proof');
 
     Route::prefix('app')->name('app.')->middleware('role:tenant')->group(base_path('routes/tenant.php'));
     Route::prefix('admin')->name('admin.')->middleware('role:owner|manager')->group(base_path('routes/admin.php'));
