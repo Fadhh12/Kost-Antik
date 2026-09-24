@@ -120,7 +120,7 @@
     }
 
     .rtable td.is-actions {
-        @apply mt-1 flex justify-end gap-2 border-t border-kapur-100 pt-3 md:mt-0 md:border-0 md:pt-3 md:text-right;
+        @apply mt-1 flex justify-end gap-2 border-t border-kapur-100 pt-3 md:mt-0 md:table-cell md:border-0 md:pt-3 md:text-right;
     }
 
     .link {
