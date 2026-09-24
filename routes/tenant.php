@@ -4,6 +4,7 @@ use App\Http\Controllers\Tenant\BookingController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\InvoiceController;
 use App\Http\Controllers\Tenant\LeaseController;
+use App\Http\Controllers\Tenant\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,4 @@ Route::get('/leases', [LeaseController::class, 'index'])->name('leases.index');
 Route::get('/leases/{lease}', [LeaseController::class, 'show'])->name('leases.show');
 
 Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+Route::post('/invoices/{invoice}/payments', [PaymentController::class, 'store'])->middleware('throttle:10,1')->name('invoices.payments.store');
