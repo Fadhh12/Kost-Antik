@@ -40,4 +40,26 @@ window.addEventListener('pageshow', (event) => {
     });
 });
 
+/*
+ * Reveal saat scroll untuk halaman publik: elemen [data-reveal] muncul
+ * perlahan ketika masuk viewport. Tanpa JS / reduced motion: langsung tampil.
+ */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealTargets = document.querySelectorAll('[data-reveal]');
+if (!reduceMotion && 'IntersectionObserver' in window && revealTargets.length) {
+    document.documentElement.classList.add('js-reveal');
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+    );
+    revealTargets.forEach((el) => observer.observe(el));
+}
+
 Alpine.start();
