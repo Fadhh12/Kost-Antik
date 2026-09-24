@@ -1,8 +1,15 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
+/*
+|--------------------------------------------------------------------------
+| Jadwal harian (SRS 2.4), zona waktu Asia/Jakarta
+|--------------------------------------------------------------------------
+| Jalankan scheduler: php artisan schedule:work (dev) atau cron
+| "* * * * * php artisan schedule:run" (produksi).
+*/
+
+Schedule::command('invoices:mark-overdue')->dailyAt('00:05')->timezone('Asia/Jakarta')->withoutOverlapping();
+Schedule::command('leases:complete-expired')->dailyAt('00:10')->timezone('Asia/Jakarta')->withoutOverlapping();
+Schedule::command('bookings:expire-stale')->dailyAt('00:15')->timezone('Asia/Jakarta')->withoutOverlapping();
