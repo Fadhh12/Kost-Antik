@@ -1,4 +1,5 @@
 <?php
+
 // Generator placeholder foto Kost Antik (SVG): fasad, kamar, dan close-up tegel kunci.
 // Jalankan: php scripts/generate-placeholders.php
 $out = __DIR__.'/../public/images/placeholders';
@@ -80,8 +81,12 @@ function room(array $p, int $variant): string
     $pat = tilePattern('t', $p, 90);
     $bedX = $variant % 2 ? 860 : 200;
     $deskX = $variant % 2 ? 200 : 1080;
-    $b30 = $bedX + 30; $b260 = $bedX + 260;
-    $d20 = $deskX + 20; $d284 = $deskX + 284; $d120 = $deskX + 120; $d160 = $deskX + 160;
+    $b30 = $bedX + 30;
+    $b260 = $bedX + 260;
+    $d20 = $deskX + 20;
+    $d284 = $deskX + 284;
+    $d120 = $deskX + 120;
+    $d160 = $deskX + 160;
 
     return <<<SVG
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
