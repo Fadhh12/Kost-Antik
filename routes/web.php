@@ -23,8 +23,8 @@ Route::get('/kost/{property:slug}/ajukan', [PropertyCatalogController::class, 'a
     ->middleware('auth')
     ->name('kost.apply');
 
-// Styleguide komponen: hanya di environment local.
-if (app()->environment('local')) {
+// Styleguide & login cepat: hanya di environment local dengan APP_DEBUG=true.
+if (app()->environment('local') && config('app.debug')) {
     Route::view('/_styleguide', 'styleguide')->name('styleguide');
 
     // Masuk cepat sebagai akun demo untuk pengecekan visual (screenshot).
