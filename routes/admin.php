@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\LeaseController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\PropertyImageController;
 use App\Http\Controllers\Admin\RoomController;
@@ -38,6 +39,12 @@ Route::post('leases', [LeaseController::class, 'store'])->name('leases.store');
 Route::get('leases/{lease}', [LeaseController::class, 'show'])->name('leases.show');
 Route::patch('leases/{lease}/terminate', [LeaseController::class, 'terminate'])->name('leases.terminate');
 Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+Route::post('invoices/{invoice}/payments/cash', [PaymentController::class, 'cash'])->name('invoices.cash');
+
+// Pembayaran
+Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
+Route::patch('payments/{payment}/verify', [PaymentController::class, 'verify'])->name('payments.verify');
+Route::patch('payments/{payment}/reject', [PaymentController::class, 'reject'])->name('payments.reject');
 
 // Pengguna
 Route::get('users', [UserController::class, 'index'])->name('users.index');
@@ -46,6 +53,7 @@ Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
 // Khusus owner
 Route::middleware('role:owner')->group(function () {
     Route::post('users/managers', [UserController::class, 'storeManager'])->name('users.managers.store');
+    Route::patch('payments/{payment}/revoke', [PaymentController::class, 'revoke'])->name('payments.revoke');
     Route::patch('users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
     Route::patch('users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
     Route::patch('users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
