@@ -30,7 +30,7 @@ return [
         'phone' => env('KOST_CONTACT_PHONE', '+62 812-0000-0000'),
         'email' => env('KOST_CONTACT_EMAIL', 'halo@kostantik.test'),
         'address' => env('KOST_ADDRESS', 'Jl. Kemang Pratama Raya No. 12, Bekasi'),
-        'hours' => 'Senin–Sabtu, 08.00–20.00 WIB',
+        'hours' => 'Senin-Sabtu, 08.00-20.00 WIB',
     ],
 
 ];
