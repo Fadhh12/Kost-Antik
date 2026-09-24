@@ -1,3 +1,87 @@
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/bricolage-grotesque';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        @apply bg-kapur-50 text-ink-900 antialiased;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection {
+        @apply bg-kuningan-300 text-ink-900;
+    }
+
+    :focus-visible {
+        @apply outline-none ring-2 ring-kuningan-500 ring-offset-2 ring-offset-kapur-50;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    h1, h2, h3 {
+        @apply font-display tracking-tight;
+    }
+}
+
+@layer components {
+    /* Motif tegel kunci: seperempat lingkaran di tiap sudut + belah ketupat.
+       Saat diulang, empat sudut membentuk bunga "kunci". */
+    .bg-tegel {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23C39A3F' stroke-width='1.1'%3E%3Cpath d='M0 16A16 16 0 0 0 16 0M32 0a16 16 0 0 0 16 16M48 32a16 16 0 0 0-16 16M16 48A16 16 0 0 0 0 32'/%3E%3Cpath d='M24 13l11 11-11 11-11-11z'/%3E%3Ccircle cx='24' cy='24' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: 48px 48px;
+    }
+
+    .bg-tegel-light {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%230F4D48' stroke-width='1'%3E%3Cpath d='M0 16A16 16 0 0 0 16 0M32 0a16 16 0 0 0 16 16M48 32a16 16 0 0 0-16 16M16 48A16 16 0 0 0 0 32'/%3E%3Cpath d='M24 13l11 11-11 11-11-11z'/%3E%3Ccircle cx='24' cy='24' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: 48px 48px;
+    }
+
+    /* Strip ubin tipis sebagai pemisah antarsection. */
+    .tegel-strip {
+        height: 12px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 6l6-6 6 6-6 6zM12 6l6-6 6 6-6 6z' fill='%23C39A3F' fill-opacity='.55'/%3E%3C/svg%3E");
+        background-size: 24px 12px;
+    }
+
+    .num {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .card {
+        @apply rounded-xl border border-kapur-200 bg-white;
+    }
+
+    .label {
+        @apply mb-1.5 block text-sm font-medium text-ink-700;
+    }
+
+    .field {
+        @apply block w-full rounded-lg border-kapur-300 bg-white text-sm text-ink-900 shadow-tile placeholder:text-ink-400
+            focus:border-tegel-600 focus:ring-2 focus:ring-tegel-600/25
+            disabled:cursor-not-allowed disabled:bg-kapur-100 disabled:text-ink-500;
+    }
+
+    .field-error {
+        @apply border-danger focus:border-danger focus:ring-danger/20;
+    }
+
+    .link {
+        @apply font-medium text-tegel-700 underline decoration-tegel-200 decoration-2 underline-offset-4 transition hover:decoration-tegel-600;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
