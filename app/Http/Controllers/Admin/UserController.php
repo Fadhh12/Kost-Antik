@@ -60,7 +60,7 @@ class UserController extends Controller
 
         return view('admin.users.show', [
             'user' => $user,
-            'leases' => $user->leases()->forManager($actor)->with('room.property')->latest('start_date')->get(),
+            'leases' => $user->leases()->forManager($actor)->with('room.property')->latest('start_date')->limit(10)->get(),
             'bookings' => $user->bookings()->forManager($actor)->with('room.property')->latest()->limit(10)->get(),
         ]);
     }
