@@ -5,6 +5,7 @@ use App\Http\Controllers\PaymentProofController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PropertyCatalogController;
+use App\Http\Controllers\Public\PropertySubmissionController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,12 @@ Route::get('/kost/{property:slug}', [PropertyCatalogController::class, 'show'])-
 Route::get('/kost/{property:slug}/ajukan', [PropertyCatalogController::class, 'apply'])
     ->middleware('auth')
     ->name('kost.apply');
+
+// F-XX: pemilik kost lain mendaftarkan gedungnya untuk ditinjau admin.
+Route::get('/daftar-kost', [PropertySubmissionController::class, 'create'])->name('kost.submissions.create');
+Route::post('/daftar-kost', [PropertySubmissionController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('kost.submissions.store');
 
 // Styleguide & login cepat: hanya di environment local dengan APP_DEBUG=true.
 if (app()->environment('local') && config('app.debug')) {

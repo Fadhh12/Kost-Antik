@@ -8,6 +8,7 @@ use App\Enums\Role;
 use App\Enums\UserStatus;
 use App\Models\BookingRequest;
 use App\Models\Payment;
+use App\Models\PropertySubmission;
 use App\Models\User;
 use Illuminate\View\View;
 
@@ -30,6 +31,7 @@ class AdminCountsComposer
             'users' => $user->isOwner()
                 ? User::role(Role::Tenant->value)->where('status', UserStatus::Pending)->count()
                 : 0,
+            'propertySubmissions' => $user->isOwner() ? PropertySubmission::query()->pending()->count() : 0,
         ]));
     }
 }

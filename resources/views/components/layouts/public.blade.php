@@ -17,6 +17,7 @@
                     $links = [
                         ['label' => 'Cari Kost', 'route' => 'kost.index', 'active' => 'kost.*'],
                         ['label' => 'Cara Sewa', 'href' => route('home').'#cara-sewa'],
+                        ['label' => 'Daftarkan Kost', 'route' => 'kost.submissions.create', 'active' => 'kost.submissions.*'],
                         ['label' => 'Kontak', 'href' => '#kontak'],
                     ];
                 @endphp
@@ -61,6 +62,9 @@
                     <a href="{{ route('kost.index') }}" class="block rounded-lg px-3 py-2.5 font-semibold text-ink-900 hover:bg-kapur-100">Cari Kost</a>
                 @endif
                 <a href="{{ route('home') }}#cara-sewa" x-on:click="open = false" class="block rounded-lg px-3 py-2.5 font-semibold text-ink-900 hover:bg-kapur-100">Cara Sewa</a>
+                @if (Route::has('kost.submissions.create'))
+                    <a href="{{ route('kost.submissions.create') }}" class="block rounded-lg px-3 py-2.5 font-semibold text-ink-900 hover:bg-kapur-100">Daftarkan Kost</a>
+                @endif
                 <a href="#kontak" x-on:click="open = false" class="block rounded-lg px-3 py-2.5 font-semibold text-ink-900 hover:bg-kapur-100">Kontak</a>
             </nav>
             <div class="grid grid-cols-2 gap-2 border-t border-kapur-200 px-4 py-3">

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\LeaseController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\PropertyImageController;
+use App\Http\Controllers\Admin\PropertySubmissionController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\RoomController;
@@ -65,6 +66,10 @@ Route::middleware('role:owner')->group(function () {
     Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
     Route::patch('reviews/{review}/toggle', [ReviewController::class, 'toggle'])->name('reviews.toggle');
     Route::get('reports/payments', [ReportController::class, 'payments'])->name('reports.payments');
+
+    Route::get('property-submissions', [PropertySubmissionController::class, 'index'])->name('property-submissions.index');
+    Route::post('property-submissions/{propertySubmission}/approve', [PropertySubmissionController::class, 'approve'])->name('property-submissions.approve');
+    Route::post('property-submissions/{propertySubmission}/reject', [PropertySubmissionController::class, 'reject'])->name('property-submissions.reject');
 
     Route::resource('facilities', FacilityController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('instances', InstanceController::class)->only(['index', 'store', 'update', 'destroy']);

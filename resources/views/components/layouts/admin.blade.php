@@ -24,6 +24,7 @@
             ['label' => 'Fasilitas', 'route' => 'admin.facilities.index', 'match' => 'admin.facilities.*', 'icon' => 'sofa', 'owner' => true],
             ['label' => 'Instansi', 'route' => 'admin.instances.index', 'match' => 'admin.instances.*', 'icon' => 'graduation-cap', 'owner' => true],
             ['label' => 'Ulasan', 'route' => 'admin.reviews.index', 'match' => 'admin.reviews.*', 'icon' => 'star', 'owner' => true],
+            ['label' => 'Pengajuan kost', 'route' => 'admin.property-submissions.index', 'match' => 'admin.property-submissions.*', 'icon' => 'inbox', 'owner' => true, 'count' => $counts['propertySubmissions'] ?? 0],
             ['label' => 'Laporan', 'route' => 'admin.reports.payments', 'match' => 'admin.reports.*', 'icon' => 'chart-column', 'owner' => true],
         ],
     ];
