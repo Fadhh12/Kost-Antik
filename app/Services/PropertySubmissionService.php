@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Enums\PropertyStatus;
+use App\Enums\Role;
 use App\Enums\SubmissionStatus;
 use App\Exceptions\BusinessRuleException;
 use App\Models\Property;
 use App\Models\PropertySubmission;
 use App\Models\User;
+use App\Notifications\NewPropertySubmissionNotification;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class PropertySubmissionService
@@ -20,7 +23,7 @@ class PropertySubmissionService
      */
     public function submit(array $data, array $photos): PropertySubmission
     {
-        return DB::transaction(function () use ($data, $photos) {
+        $submission = DB::transaction(function () use ($data, $photos) {
             $submission = PropertySubmission::create($data + ['status' => SubmissionStatus::Pending]);
 
             if ($photos) {
@@ -29,6 +32,10 @@ class PropertySubmissionService
 
             return $submission;
         });
+
+        Notification::send(User::role(Role::Owner->value)->get(), new NewPropertySubmissionNotification($submission));
+
+        return $submission;
     }
 
     /**

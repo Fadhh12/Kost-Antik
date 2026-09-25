@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Enums\BookingStatus;
+use App\Enums\Role;
 use App\Exceptions\BusinessRuleException;
 use App\Models\BookingRequest;
 use App\Models\Lease;
 use App\Models\Room;
 use App\Models\User;
+use App\Notifications\NewBookingRequestNotification;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class BookingService
 {
@@ -25,7 +28,7 @@ class BookingService
      */
     public function create(User $tenant, Room $room, CarbonInterface $startDate, int $durationMonths, ?string $note): BookingRequest
     {
-        return DB::transaction(function () use ($tenant, $room, $startDate, $durationMonths, $note) {
+        $booking = DB::transaction(function () use ($tenant, $room, $startDate, $durationMonths, $note) {
             // Kunci baris user agar dua pengajuan bersamaan tidak lolos BR-01.
             User::whereKey($tenant->id)->lockForUpdate()->first();
             $room = Room::whereKey($room->id)->lockForUpdate()->firstOrFail();
@@ -46,6 +49,18 @@ class BookingService
 
             return $booking;
         });
+
+        $this->notifyNewBooking($booking);
+
+        return $booking;
+    }
+
+    private function notifyNewBooking(BookingRequest $booking): void
+    {
+        $manager = $booking->room->property->manager;
+        $recipients = $manager ? collect([$manager]) : User::role(Role::Owner->value)->get();
+
+        Notification::send($recipients, new NewBookingRequestNotification($booking));
     }
 
     /**

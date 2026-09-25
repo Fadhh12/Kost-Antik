@@ -6,8 +6,10 @@ use App\Enums\SubmissionStatus;
 use App\Models\Property;
 use App\Models\PropertySubmission;
 use App\Models\User;
+use App\Notifications\NewPropertySubmissionNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -31,6 +33,8 @@ class PropertySubmissionTest extends TestCase
     public function test_guest_can_submit_a_kost_registration(): void
     {
         Storage::fake('public');
+        Notification::fake();
+        $owner = User::factory()->owner()->create();
 
         $this->get('/daftar-kost')->assertOk();
 
@@ -43,6 +47,7 @@ class PropertySubmissionTest extends TestCase
         $this->assertTrue($submission->status === SubmissionStatus::Pending);
         $this->assertCount(1, $submission->photos);
         Storage::disk('public')->assertExists($submission->photos[0]);
+        Notification::assertSentTo($owner, NewPropertySubmissionNotification::class);
     }
 
     public function test_required_fields_are_validated(): void

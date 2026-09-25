@@ -10,10 +10,12 @@ use App\Models\BookingRequest;
 use App\Models\Property;
 use App\Models\Room;
 use App\Models\User;
+use App\Notifications\NewBookingRequestNotification;
 use App\Services\BookingService;
 use App\Services\LeaseService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class BookingFlowTest extends TestCase
@@ -136,6 +138,28 @@ class BookingFlowTest extends TestCase
 
         $this->actingAs($manager)->patch("/admin/bookings/{$booking->id}/approve")->assertForbidden();
         $this->actingAs($manager)->get('/admin/bookings')->assertOk()->assertDontSee($booking->user->name);
+    }
+
+    public function test_property_manager_is_notified_of_new_booking(): void
+    {
+        Notification::fake();
+        $manager = User::factory()->manager()->create();
+        $room = Room::factory()->for(Property::factory()->state(['manager_id' => $manager->id]))->create();
+
+        $this->book(User::factory()->tenant()->create(), $room);
+
+        Notification::assertSentTo($manager, NewBookingRequestNotification::class);
+    }
+
+    public function test_owners_are_notified_when_property_has_no_manager(): void
+    {
+        Notification::fake();
+        $owner = User::factory()->owner()->create();
+        $room = Room::factory()->for(Property::factory()->state(['manager_id' => null]))->create();
+
+        $this->book(User::factory()->tenant()->create(), $room);
+
+        Notification::assertSentTo($owner, NewBookingRequestNotification::class);
     }
 
     public function test_stale_bookings_expire(): void
