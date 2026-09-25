@@ -25,3 +25,4 @@ Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('revi
 
 Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
 Route::post('/invoices/{invoice}/payments', [PaymentController::class, 'store'])->middleware('throttle:10,1')->name('invoices.payments.store');
+Route::post('/invoices/{invoice}/pay-online', [PaymentController::class, 'snap'])->middleware('throttle:10,1')->name('invoices.pay-online');

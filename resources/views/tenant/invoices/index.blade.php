@@ -1,3 +1,10 @@
+@if ($midtransActive)
+    @push('head')
+        <script src="{{ $midtransProduction ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+            data-client-key="{{ $midtransClientKey }}"></script>
+    @endpush
+@endif
+
 @php
     $payRoute = Route::has('app.invoices.payments.store');
     $tabItems = [
@@ -13,6 +20,27 @@
     <div x-data="{
             inv: null,
             pay(data) { this.inv = data; $dispatch('open-modal', 'bayar') },
+            payOnline(invoiceId) {
+                fetch(`/app/invoices/${invoiceId}/pay-online`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                        'Accept': 'application/json',
+                    },
+                })
+                    .then((r) => r.json())
+                    .then((data) => {
+                        if (! data.token) {
+                            window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: data.message || 'Gagal memulai pembayaran.' } }));
+                            return;
+                        }
+                        window.snap.pay(data.token, {
+                            onSuccess: () => window.location.href = '{{ route('app.invoices.index', ['tab' => 'lunas']) }}',
+                            onPending: () => window.location.href = '{{ route('app.invoices.index', ['tab' => 'menunggu']) }}',
+                            onError: () => window.dispatchEvent(new CustomEvent('toast', { detail: { type: 'error', message: 'Pembayaran gagal, coba lagi.' } })),
+                        });
+                    });
+            },
         }"
         @if ($preselect && $payRoute)
             x-init="$nextTick(() => document.querySelector('[data-pay=&quot;{{ $preselect }}&quot;]')?.click())"
@@ -73,7 +101,12 @@
                         <div class="flex items-center justify-between gap-4 border-t border-kapur-100 pt-3 sm:flex-col sm:items-end sm:border-0 sm:pt-0">
                             <p class="num font-display text-lg font-semibold"><x-money :amount="$invoice->amount" /></p>
                             @if ($invoice->isPayable() && $payRoute)
-                                <x-button size="sm" icon="upload" data-pay="{{ $invoice->id }}" x-on:click="pay(@js($data))">Bayar</x-button>
+                                <div class="flex flex-col items-end gap-2 sm:flex-row">
+                                    @if ($midtransActive)
+                                        <x-button size="sm" variant="secondary" icon="credit-card" x-on:click="payOnline({{ $invoice->id }})">Bayar online</x-button>
+                                    @endif
+                                    <x-button size="sm" icon="upload" data-pay="{{ $invoice->id }}" x-on:click="pay(@js($data))">Bayar</x-button>
+                                </div>
                             @elseif ($last?->hasProof() && Route::has('payments.proof'))
                                 <a href="{{ route('payments.proof', $last) }}" target="_blank" class="link text-sm">Lihat bukti</a>
                             @endif

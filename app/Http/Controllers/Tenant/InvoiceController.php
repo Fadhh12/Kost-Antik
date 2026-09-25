@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Enums\InvoiceStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -19,7 +20,7 @@ class InvoiceController extends Controller
         'lunas' => [InvoiceStatus::Paid],
     ];
 
-    public function index(Request $request): View
+    public function index(Request $request, MidtransService $midtrans): View
     {
         $user = $request->user();
         $tab = array_key_exists($request->query('tab'), self::TABS) ? $request->query('tab') : 'belum';
@@ -40,6 +41,11 @@ class InvoiceController extends Controller
             ? (clone $base)->with('lease.room.property')->find($request->integer('bayar'))
             : null;
 
-        return view('tenant.invoices.index', compact('invoices', 'tab', 'counts', 'payInvoice'));
+        return view('tenant.invoices.index', [
+            ...compact('invoices', 'tab', 'counts', 'payInvoice'),
+            'midtransActive' => $midtrans->isActive(),
+            'midtransClientKey' => $midtrans->clientKey(),
+            'midtransProduction' => $midtrans->isProduction(),
+        ]);
     }
 }

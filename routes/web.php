@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\PaymentProofController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\MidtransWebhookController;
 use App\Http\Controllers\Public\PropertyCatalogController;
 use App\Http\Controllers\Public\PropertySubmissionController;
 use App\Http\Controllers\Public\SitemapController;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::post('/webhooks/midtrans', MidtransWebhookController::class)->middleware('throttle:120,1')->name('webhooks.midtrans');
 Route::get('/kost', [PropertyCatalogController::class, 'index'])->name('kost.index');
 Route::get('/kost/{property:slug}', [PropertyCatalogController::class, 'show'])->name('kost.show');
 

@@ -31,4 +31,15 @@ return [
         ],
     ],
 
+    /*
+    | Midtrans Snap. Kosong = fitur "Bayar online" disembunyikan otomatis
+    | (lihat MidtransService::isActive()). Daftar akun sandbox di
+    | https://dashboard.sandbox.midtrans.com untuk isi server_key/client_key.
+    */
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => (bool) env('MIDTRANS_IS_PRODUCTION', false),
+    ],
+
 ];

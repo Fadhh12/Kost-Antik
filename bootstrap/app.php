@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
         ]);
+
+        // Notifikasi server-to-server Midtrans tidak punya sesi/CSRF token; diamankan via signature_key.
+        $middleware->validateCsrfTokens(except: ['webhooks/midtrans']);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

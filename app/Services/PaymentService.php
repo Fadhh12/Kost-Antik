@@ -160,16 +160,52 @@ class PaymentService
         });
     }
 
+    /**
+     * Webhook Midtrans: pembayaran lunas dari gateway dianggap langsung terverifikasi.
+     * Idempoten terhadap gateway_reference karena Midtrans bisa mengirim notifikasi berulang.
+     */
+    public function recordFromGateway(Invoice $invoice, int $amount, string $gatewayReference): Payment
+    {
+        return DB::transaction(function () use ($invoice, $amount, $gatewayReference) {
+            $existing = Payment::where('gateway_reference', $gatewayReference)->first();
+            if ($existing) {
+                return $existing;
+            }
+
+            $invoice = $this->lockInvoice($invoice);
+            $this->assertPayable($invoice, $amount);
+
+            $tenant = $invoice->lease->user;
+
+            $payment = $invoice->payments()->create([
+                'amount' => $amount,
+                'method' => PaymentMethod::Midtrans,
+                'paid_at' => today(),
+                'status' => PaymentStatus::Pending,
+                'submitted_by' => $tenant->id,
+                'gateway_reference' => $gatewayReference,
+            ]);
+
+            $this->markVerified($payment, $invoice, null);
+
+            activity('payment')->performedOn($payment)->causedBy($tenant)->event('gateway_verified')
+                ->withProperties(['invoice' => $invoice->number, 'amount' => $amount, 'reference' => $gatewayReference])
+                ->log('Pembayaran via Midtrans terverifikasi otomatis');
+
+            return $payment;
+        });
+    }
+
     public function proofExists(Payment $payment): bool
     {
         return $payment->hasProof() && Storage::disk(self::PROOF_DISK)->exists($payment->proof_path);
     }
 
-    private function markVerified(Payment $payment, Invoice $invoice, User $actor): void
+    private function markVerified(Payment $payment, Invoice $invoice, ?User $actor): void
     {
         $payment->update([
             'status' => PaymentStatus::Verified,
-            'verified_by' => $actor->id,
+            'verified_by' => $actor?->id,
             'verified_at' => now(),
         ]);
 

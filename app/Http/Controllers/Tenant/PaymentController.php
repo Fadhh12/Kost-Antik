@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\StorePaymentRequest;
 use App\Models\Invoice;
+use App\Services\MidtransService;
 use App\Services\PaymentService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 
@@ -23,5 +25,24 @@ class PaymentController extends Controller
 
         return redirect()->route('app.invoices.index', ['tab' => 'menunggu'])
             ->with('success', 'Bukti bayar terkirim. Pengelola akan memverifikasi dalam 1x24 jam.');
+    }
+
+    public function snap(Invoice $invoice, MidtransService $midtrans): JsonResponse
+    {
+        abort_unless($invoice->lease->user_id === auth()->id(), 403);
+
+        if (! $midtrans->isActive()) {
+            return response()->json(['message' => 'Pembayaran online belum tersedia.'], 422);
+        }
+
+        if (! $invoice->isPayable()) {
+            return response()->json(['message' => 'Tagihan ini tidak bisa dibayar.'], 422);
+        }
+
+        return response()->json([
+            'token' => $midtrans->createSnapToken($invoice),
+            'client_key' => $midtrans->clientKey(),
+            'is_production' => $midtrans->isProduction(),
+        ]);
     }
 }
