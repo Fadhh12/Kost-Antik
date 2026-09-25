@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PropertyCatalogController;
 use App\Http\Controllers\Public\PropertySubmissionController;
+use App\Http\Controllers\Public\SitemapController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/kost', [PropertyCatalogController::class, 'index'])->name('kost.index');
 Route::get('/kost/{property:slug}', [PropertyCatalogController::class, 'show'])->name('kost.show');
 

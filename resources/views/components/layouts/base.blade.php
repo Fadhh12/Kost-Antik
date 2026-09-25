@@ -7,6 +7,7 @@
 
 @php
     $fullTitle = $title ? $title.' · Kost Antik' : 'Kost Antik · Kamar kost yang jelas, tagihan yang rapi';
+    $ogImage = $image ?? asset('images/placeholders/kost-1.jpg');
 @endphp
 
 <!DOCTYPE html>
@@ -25,10 +26,9 @@
     <meta property="og:title" content="{{ $fullTitle }}">
     <meta property="og:description" content="{{ $description }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    @if ($image)
-        <meta property="og:image" content="{{ $image }}">
-    @endif
+    <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:locale" content="id_ID">
+    <meta name="twitter:card" content="summary_large_image">
 
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
