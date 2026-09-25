@@ -36,7 +36,7 @@ class PropertySeeder extends Seeder
                     'manager_id' => $managerA?->id,
                 ],
                 'shared' => ['Wi-Fi', 'Dapur bersama', 'Parkir motor', 'CCTV 24 jam', 'Ruang tamu', 'Kulkas bersama'],
-                'images' => ['kost-1.svg', 'kamar-1.svg', 'tegel-1.svg', 'kamar-3.svg', 'tegel-3.svg'],
+                'images' => ['kost-1.jpg', 'kamar-1.jpg', 'tegel-1.jpg', 'kamar-3.jpg', 'tegel-3.jpg'],
                 'rooms' => [
                     ['1A', 1, 12, 1_250_000, ['AC', 'Kasur & bantal', 'Lemari pakaian', 'Meja belajar', 'Kamar mandi dalam']],
                     ['1B', 1, 12, 1_250_000, ['AC', 'Kasur & bantal', 'Lemari pakaian', 'Meja belajar', 'Kamar mandi dalam']],
@@ -59,7 +59,7 @@ class PropertySeeder extends Seeder
                     'manager_id' => $managerB?->id,
                 ],
                 'shared' => ['Wi-Fi', 'Parkir motor', 'Laundry', 'CCTV 24 jam', 'Dapur bersama'],
-                'images' => ['kost-2.svg', 'kamar-2.svg', 'tegel-2.svg', 'kamar-4.svg'],
+                'images' => ['kost-2.jpg', 'kamar-2.jpg', 'tegel-2.jpg', 'kamar-4.jpg'],
                 'rooms' => [
                     ['A1', 1, 10.5, 900_000, ['Kipas angin', 'Kasur & bantal', 'Lemari pakaian']],
                     ['A2', 1, 10.5, 900_000, ['Kipas angin', 'Kasur & bantal', 'Lemari pakaian']],
@@ -83,7 +83,7 @@ class PropertySeeder extends Seeder
                     'manager_id' => $managerA?->id,
                 ],
                 'shared' => ['Wi-Fi', 'Dapur bersama', 'Laundry', 'CCTV 24 jam', 'Ruang tamu', 'Parkir motor'],
-                'images' => ['kost-3.svg', 'tegel-3.svg', 'kamar-3.svg', 'kamar-1.svg'],
+                'images' => ['kost-3.jpg', 'tegel-3.jpg', 'kamar-3.jpg', 'kamar-1.jpg'],
                 'rooms' => [
                     ['101', 1, 14, 1_600_000, ['AC', 'Kasur & bantal', 'Lemari pakaian', 'Meja belajar', 'Kamar mandi dalam']],
                     ['102', 1, 14, 1_600_000, ['AC', 'Kasur & bantal', 'Lemari pakaian', 'Meja belajar', 'Kamar mandi dalam']],
@@ -105,7 +105,7 @@ class PropertySeeder extends Seeder
                     'manager_id' => $managerB?->id,
                 ],
                 'shared' => ['Wi-Fi', 'Parkir motor', 'Kulkas bersama'],
-                'images' => ['kost-4.svg', 'kamar-4.svg', 'tegel-4.svg'],
+                'images' => ['kost-4.jpg', 'kamar-4.jpg', 'tegel-4.jpg'],
                 'rooms' => [
                     ['K1', 1, 9, 800_000, ['Kipas angin', 'Kasur & bantal', 'Lemari pakaian']],
                     ['K2', 1, 9, 800_000, ['Kipas angin', 'Kasur & bantal', 'Lemari pakaian']],
@@ -130,7 +130,7 @@ class PropertySeeder extends Seeder
                     'manager_id' => null,
                 ],
                 'shared' => ['Wi-Fi'],
-                'images' => ['kost-2.svg'],
+                'images' => ['kost-2.jpg'],
                 'rooms' => [
                     ['1', 1, 9, 750_000, ['Kasur & bantal']],
                     ['2', 1, 9, 750_000, ['Kasur & bantal']],

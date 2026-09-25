@@ -151,7 +151,7 @@ class Property extends Model
 
     protected function coverUrl(): Attribute
     {
-        return Attribute::get(fn () => $this->coverImage?->url ?? asset('images/placeholders/kost-1.svg'));
+        return Attribute::get(fn () => $this->coverImage?->url ?? asset('images/placeholders/kost-1.jpg'));
     }
 
     protected function hasLocation(): Attribute
