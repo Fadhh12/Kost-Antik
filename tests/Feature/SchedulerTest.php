@@ -26,6 +26,7 @@ class SchedulerTest extends TestCase
         $this->assertSame('5 0 * * *', $events['invoices:mark-overdue']);
         $this->assertSame('10 0 * * *', $events['leases:complete-expired']);
         $this->assertSame('15 0 * * *', $events['bookings:expire-stale']);
+        $this->assertSame('0 2 * * *', $events['backup:run']);
     }
 
     public function test_overdue_and_completion_commands(): void
